@@ -109,9 +109,6 @@ namespace MasterMind
                 {
                     stringColours[i] = colours[random.Next(colours.Length)];
                 }
-
-                //pour la vérification simple
-                Console.WriteLine("DEBUG: " + new string(stringColours));
             }
             //boucle qui demande l'utilisateur s'il veux continuer
             do
