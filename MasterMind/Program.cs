@@ -16,11 +16,11 @@ namespace MasterMind
         static void Main(string[] args)
         {
             //définition des valeurs (couleurs possibles, random pour générer des symboles aléatoires, valeur, entrée par l'utilisateur,
-            //nombre d'essais souhaité, essais, la longueur d'une combinaison souhaitée, nombre des couleurs et un booléen pour vérifier si les couleurs entrées sont justes
             //l'idée de random a été prise là:https://stackoverflow.com/questions/1344221/how-can-i-generate-random-alphanumeric-strings
             var colours = "GYWRBMC";
             var random = new Random();
             string guess;
+            //nombre d'essais souhaité, essais, la longueur d'une combinaison souhaitée, nombre des couleurs et un booléen pour vérifier si les couleurs entrées sont justes
             int attempts = 1;
             int tries;
             int combLength;
@@ -28,12 +28,91 @@ namespace MasterMind
             const int MAX_TRIES = 30;
             const int MAX_COMB_LENGTH = 6;
             const int MAX_NUM_COLOURS = 7;
-            const int MIN_TRIES = 1;
+            const int MIN_TRIES = 2;
             const int MIN_COMB_LENGTH = 2;
             const int MIN_NUM_COLOURS = 2;
+            //choix du mode
             string mode;
             bool ok = true;
+            //continuer le jeu
+            string affirmation;
+            //combinaison créée
+            char[] stringColours = new char[1];
 
+            //fonction pour les même partie de code pour deux modes
+            void Combination()
+            {
+                //pour différencier parties différentes
+                Console.WriteLine("***********************");
+
+                //entrer le nombre d'essais souhaité et le vérifier si c'est agréable
+                Console.WriteLine("Combien d'essais avez-vous besoin (" + MIN_TRIES + "-" + MAX_TRIES + ")?");
+                tries = Convert.ToInt32(Console.ReadLine());
+                while (tries < MIN_TRIES || tries > MAX_TRIES)
+                {
+                    Console.WriteLine("Entrez le nombre de " + MIN_TRIES + " à " + MAX_TRIES + ":");
+                    tries = Convert.ToInt32(Console.ReadLine());
+                }
+                Console.WriteLine("***********************");
+
+                //entrer la longueur d'une combinaison souhaitée et la vérifier si c'est agréable
+                Console.WriteLine("Quelle longueur d'une combinaison voulez-vous (" + MIN_COMB_LENGTH + "-" + MAX_COMB_LENGTH + ")?");
+                combLength = Convert.ToInt32(Console.ReadLine());
+                while (combLength < MIN_COMB_LENGTH || combLength > MAX_COMB_LENGTH)
+                {
+                    Console.WriteLine("Entrez le nombre de " + MIN_COMB_LENGTH + " à " + MAX_COMB_LENGTH + ":");
+                    combLength = Convert.ToInt32(Console.ReadLine());
+                }
+                Console.WriteLine("***********************");
+
+                //entrer le nombre des couleurs souhaité et le vérifier si c'est agréable
+                Console.WriteLine("Combien de couleurs possibles souhaitez-vous avoir (" + MIN_NUM_COLOURS + "-" + MAX_NUM_COLOURS + ")?");
+                numColours = Convert.ToInt32(Console.ReadLine());
+                while (numColours < MIN_NUM_COLOURS || numColours > MAX_NUM_COLOURS)
+                {
+                    Console.WriteLine("Entrez le nombre de " + MIN_NUM_COLOURS + " à " + MAX_NUM_COLOURS + ":");
+                    numColours = Convert.ToInt32(Console.ReadLine());
+                }
+                Console.WriteLine("***********************");
+
+                //changer le tableau pour le nombre des couleurs choisi
+                if (numColours == 2)
+                {
+                    colours = "GY";
+                }
+                else if (numColours == 3)
+                {
+                    colours = "GYW";
+                }
+                else if (numColours == 4)
+                {
+                    colours = "GYWR";
+                }
+                else if (numColours == 5)
+                {
+                    colours = "GYWRB";
+                }
+                else if (numColours == 6)
+                {
+                    colours = "GYWRBM";
+                }
+
+                //effacer tout ce qui est écrit pour la vue plus agréable
+                Console.Clear();
+
+                Console.WriteLine("Devinez le code en " + combLength + " couleurs parmi " + colours + ". La répétition possible.");
+                //tableau pour stocker la combinaison
+                stringColours = new char[combLength];
+
+                //boucle qui se répète 4 fois pour que la variable "stringColours" prenne des valeurs de "colours"
+                for (int i = 0; i < stringColours.Length; i++)
+                {
+                    stringColours[i] = colours[random.Next(colours.Length)];
+                }
+
+                //pour la vérification simple
+                Console.WriteLine("DEBUG: " + new string(stringColours));
+            }
             //boucle qui demande l'utilisateur s'il veux continuer
             do
             {
@@ -44,82 +123,23 @@ namespace MasterMind
                 Console.WriteLine("Bienvenue sur MasterMind!");
 
                 //demander de choisir le mode 
-                Console.WriteLine("Choisissez le mode (\"f\" pour facile et \"d\" pour difficile) ou affichez les règles (r):");
+                Console.WriteLine("Choisissez l'option:\n" +
+                    "[f] pour le mode facile \n" +
+                    "[d] pour le mode difficile\n" +
+                    "[r] pour affichez les règles\n" +
+                    "[q] pour quitter");
                 mode = Console.ReadLine().ToLower();
-                while (mode != "f" && mode != "d" && mode != "r")
+                while (mode != "f" && mode != "d" && mode != "r" && mode != "q")
                 {
-                    Console.WriteLine("Entrez \"f\", \"d\" ou \"r\"");
+                    Console.WriteLine("Entrez \"f\", \"d\", \"r\" ou \"q\"");
                     mode = Console.ReadLine();
                 }
 
                 //vérifications de la réponse
                 if (mode == "d")
                 {
-
-                    //entrer le nombre d'essais souhaité et le vérifier si c'est agréable
-                    Console.WriteLine("Combien d'essais avez-vous besoin (1-" + MAX_TRIES + ")?");
-                    tries = Convert.ToInt32(Console.ReadLine());
-                    while (tries <= 0 || tries > MAX_TRIES)
-                    {
-                        Console.WriteLine("Entrez le nombre de 1 à 30:");
-                        tries = Convert.ToInt32(Console.ReadLine());
-                    }
-
-                    //entrer la longueur d'une combinaison souhaitée et la vérifier si c'est agréable
-                    Console.WriteLine("Quelle longueur d'une combinaison voulez-vous (2-" + MAX_COMB_LENGTH + ")?");
-                    combLength = Convert.ToInt32(Console.ReadLine());
-                    while (combLength < 2 || combLength > MAX_COMB_LENGTH)
-                    {
-                        Console.WriteLine("Entrez le nombre de 2 à 6:");
-                        combLength = Convert.ToInt32(Console.ReadLine());
-                    }
-
-                    //entrer le nombre des couleurs souhaité et le vérifier si c'est agréable
-                    Console.WriteLine("Combien de couleurs possibles souhaitez-vous avoir (2-" + MAX_NUM_COLOURS + ")?");
-                    numColours = Convert.ToInt32(Console.ReadLine());
-                    while (numColours < 2 || numColours > MAX_NUM_COLOURS)
-                    {
-                        Console.WriteLine("Entrez le nombre de 2 à 7");
-                        numColours = Convert.ToInt32(Console.ReadLine());
-                    }
-
-
-                    if (numColours == 2)
-                    {
-                        colours = "GY";
-                    }
-                    else if (numColours == 3)
-                    {
-                        colours = "GYW";
-                    }
-                    else if (numColours == 4)
-                    {
-                        colours = "GYWR";
-                    }
-                    else if (numColours == 5)
-                    {
-                        colours = "GYWRB";
-                    }
-                    else if (numColours == 6)
-                    {
-                        colours = "GYWRBM";
-                    }
-
-                    //effacer tout ce qui est écrit pour la vue plus agréable
-                    Console.Clear();
-
-                    Console.WriteLine("Devinez le code en " + combLength + " couleurs parmi " + colours + ". La répétition possible.");
-                    //tableau pour stocker la combinaison
-                    var stringColours = new char[combLength];
-
-                    //boucle qui se répète 4 fois pour que la variable "stringColours" prenne des valeurs de "colours"
-                    for (int i = 0; i < stringColours.Length; i++)
-                    {
-                        stringColours[i] = colours[random.Next(colours.Length)];
-                    }
-
-                    //pour la vérification simple
-                    Console.WriteLine("Debug: " + stringColours);
+                    //début du jeu
+                    Combination();
 
                     //boucle qui donne que 10 essais
                     for (attempts = 1; attempts <= tries; attempts++)
@@ -195,83 +215,30 @@ namespace MasterMind
                         //afficher le resultat d'une réponse
                         Console.WriteLine("Bonnes positions: " + correctPositions);
                         Console.WriteLine("Mauvaises positions: " + correctColors);
+                        Console.WriteLine("*************************");
                     }
                     //affichage des messages "gagné/perdu"
                     if (attempts == 101)
                     {
-                        Console.WriteLine("Vous avez gagné, voulez-vous réessayer?(tapez \"y\" si vous êtes d'accord)");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("*********************************************************************************************\n" +
+                                          "Vous avez gagné, voulez-vous réessayer?(tapez \"y\" si vous êtes d'accord, \"q\" pour quitter)\n" +
+                                          "*********************************************************************************************");
+                        Console.ResetColor();
                     }
                     else
                     {
-                        Console.WriteLine("Vous avez perdu, la bonne combinaison était " + new string(stringColours) + ". Voulez-vous réessayer?(tapez \"y\" si vous êtes d'accord, tous les autres caractères pour quiter)");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("*********************************************************************************************\n" +
+                                          "Vous avez perdu, la bonne combinaison était " + new string(stringColours) + ". Voulez-vous réessayer?(tapez \"y\" si vous êtes d'accord, \"q\" pour quitter)\n" +
+                                          "*********************************************************************************************");
+                        Console.ResetColor();
                     }
                 }
                 else if (mode == "f")
                 {
-                    //entrer le nombre d'essais souhaité et le vérifier si c'est agréable
-                    Console.WriteLine("Combien d'essais avez-vous besoin (" + MIN_TRIES + "-" + MAX_TRIES + ")?");
-                    tries = Convert.ToInt32(Console.ReadLine());
-                    while (tries <= MIN_TRIES || tries > MAX_TRIES)
-                    {
-                        Console.WriteLine("Entrez le nombre de 1 à 30:");
-                        tries = Convert.ToInt32(Console.ReadLine());
-                    }
-
-                    //entrer la longueur d'une combinaison souhaitée et la vérifier si c'est agréable
-                    Console.WriteLine("Quelle longueur d'une combinaison voulez-vous (" + MIN_COMB_LENGTH + "-" + MAX_COMB_LENGTH + ")?");
-                    combLength = Convert.ToInt32(Console.ReadLine());
-                    while (combLength < MIN_COMB_LENGTH || combLength > MAX_COMB_LENGTH)
-                    {
-                        Console.WriteLine("Entrez le nombre de 2 à 6:");
-                        combLength = Convert.ToInt32(Console.ReadLine());
-                    }
-
-                    //entrer le nombre des couleurs souhaité et le vérifier si c'est agréable
-                    Console.WriteLine("Combien de couleurs possibles souhaitez-vous avoir (" + MIN_NUM_COLOURS + "-" + MAX_NUM_COLOURS + ")?");
-                    numColours = Convert.ToInt32(Console.ReadLine());
-                    while (numColours < MIN_NUM_COLOURS || numColours > MAX_NUM_COLOURS)
-                    {
-                        Console.WriteLine("Entrez le nombre de 2 à 7");
-                        numColours = Convert.ToInt32(Console.ReadLine());
-                    }
-
-                    //changer le tableau pour le nombre des couleurs choisi
-                    if (numColours == 2)
-                    {
-                        colours = "GY";
-                    }
-                    else if (numColours == 3)
-                    {
-                        colours = "GYW";
-                    }
-                    else if (numColours == 4)
-                    {
-                        colours = "GYWR";
-                    }
-                    else if (numColours == 5)
-                    {
-                        colours = "GYWRB";
-                    }
-                    else if (numColours == 6)
-                    {
-                        colours = "GYWRBM";
-                    }
-
-                    //effacer tout ce qui est écrit pour la vue plus agréable
-                    Console.Clear();
-
-                    Console.WriteLine("Devinez le code en " + combLength + " couleurs parmi " + colours + ". La répétition possible.");
-                    //tableau pour stocker la combinaison
-                    var stringColours = new char[combLength];
-
-                    //boucle qui se répète 4 fois pour que la variable "stringColours" prenne des valeurs de "colours"
-                    for (int i = 0; i < stringColours.Length; i++)
-                    {
-                        stringColours[i] = colours[random.Next(colours.Length)];
-                    }
-
-                    //pour la vérification simple
-                    Console.WriteLine(stringColours);
+                    //début du jeu
+                    Combination();
 
                     //tableau pour éviter des doublons
                     var noRep = new List<string>();
@@ -412,7 +379,7 @@ namespace MasterMind
                                 Console.Write(result[i]);
                                 Console.ResetColor();
                             }
-                            else if(result[i] == 'W' || result[i] == '$' && guess[i] == 'W')
+                            else if (result[i] == 'W' || result[i] == '$' && guess[i] == 'W')
                             {
                                 Console.Write(result[i]);
                             }
@@ -422,26 +389,50 @@ namespace MasterMind
                             }
                         }
                         Console.WriteLine();
+                        Console.WriteLine("***********************");
                     }
                     //affichage des messages "gagné/perdu"
                     if (attempts == 101)
                     {
-                        Console.WriteLine("Vous avez gagné, voulez-vous réessayer?(tapez \"y\" si vous êtes d'accord)");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("***********************************************************************************************\n" +
+                                          "Vous avez gagné, voulez-vous réessayer?(tapez \"y\" si vous êtes d'accord, \"q\" pour quitter)\n" +
+                                          "***********************************************************************************************");
+                        Console.ResetColor();
                     }
                     else
                     {
-                        Console.WriteLine("Vous avez perdu, la bonne combinaison était " + new string(stringColours) + ". Voulez-vous réessayer?(tapez \"y\" si vous êtes d'accord, tous les autres caractères pour quiter)");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("*******************************************************************************************************\n" +
+                                          "Vous avez perdu, la bonne combinaison était " + new string(stringColours) + ". Voulez-vous réessayer?(tapez \"y\" si vous êtes d'accord, \"q\" pour quitter)\n" +
+                                          "*******************************************************************************************************");
+                        Console.ResetColor();
                     }
                 }
-                else
+                //affichage des règles
+                else if (mode == "r")
                 {
-                    Console.WriteLine("Règles: dans ce jeu vous allez deviner la combinaison des couleurs qui avait été créée par le programme. \nLe nombre des bonnes et mauvais positions" +
-                        "vont être afficher choisir le mode du jeu et puis \nla difficulté (qui change le nombre d'essais, longueur de la combinaison et nombre des couleurs possibles.)\n" +
-                        "La différence entre deux modes est l'affichage (\"Bonnes positions: 1; Mauvaises positions : 2\" pour le mode difficile \net \"_G$_\" pour le mode facile)");
+                    Console.WriteLine("************************************************************************************************************\n" +
+                                      "Règles: dans ce jeu vous allez deviner la combinaison des couleurs qui a été créée par le programme. \nLes nombres des bonnes et mauvaises positions" +
+                                      "vont être affichés. Choisissez le mode du jeu et puis \nla difficulté (qui change le nombre d'essais, longueur de la combinaison et nombre des couleurs possibles.)\n" +
+                                      "La différence entre deux modes est l'affichage (\"Bonnes positions: 1; Mauvaises positions : 2\" pour le mode difficile \net \"_G$_\" pour le mode facile)\n" +
+                                      "************************************************************************************************************");
                     Console.WriteLine();
-                    Console.WriteLine("Tapez \"y\" pour continuer, toutes les autres touches pour quitter:");
+                    Console.WriteLine("Tapez \"y\" pour continuer, \"q\" pour quitter:");
                 }
-            } while (Console.ReadLine().ToLower() == "y");
+                //quitter
+                else if (mode == "q")
+                {
+                    break;
+                }
+                //entrer l'affirmation de continuer
+                affirmation = Console.ReadLine().ToLower();
+                while (affirmation != "y" && affirmation != "q")
+                {
+                    Console.WriteLine("Tapez \"y\" pour continuer, \"q\" pour quitter:");
+                    affirmation = Console.ReadLine().ToLower();
+                }
+            } while (affirmation == "y");
         }
     }
 }
