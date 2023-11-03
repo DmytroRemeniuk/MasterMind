@@ -46,7 +46,7 @@ namespace MasterMind
                 Console.WriteLine("***********************");
 
                 //entrer le nombre d'essais souhaité et le vérifier si c'est agréable
-                Console.WriteLine("Combien d'essais avez-vous besoin (" + MIN_TRIES + "-" + MAX_TRIES + ")?");
+                Console.WriteLine("De combien d'essais avez-vous besoin (" + MIN_TRIES + "-" + MAX_TRIES + ")?");
                 tries = Convert.ToInt32(Console.ReadLine());
                 while (tries < MIN_TRIES || tries > MAX_TRIES)
                 {
@@ -123,7 +123,7 @@ namespace MasterMind
                 Console.WriteLine("Choisissez l'option:\n" +
                     "[f] pour le mode facile \n" +
                     "[d] pour le mode difficile\n" +
-                    "[r] pour affichez les règles\n" +
+                    "[r] pour afficher les règles\n" +
                     "[q] pour quitter");
                 mode = Console.ReadLine().ToLower();
                 while (mode != "f" && mode != "d" && mode != "r" && mode != "q")
@@ -410,9 +410,9 @@ namespace MasterMind
                 else if (mode == "r")
                 {
                     Console.WriteLine("************************************************************************************************************\n" +
-                                      "Règles: dans ce jeu vous allez deviner la combinaison des couleurs qui a été créée par le programme. \nLes nombres des bonnes et mauvaises positions" +
-                                      "vont être affichés. Choisissez le mode du jeu et puis \nla difficulté (qui change le nombre d'essais, longueur de la combinaison et nombre des couleurs possibles.)\n" +
-                                      "La différence entre deux modes est l'affichage (\"Bonnes positions: 1; Mauvaises positions : 2\" pour le mode difficile \net \"_G$_\" pour le mode facile)\n" +
+                                      "Règles: dans ce jeu vous allez deviner la combinaison de couleurs qui a été créée par le programme. \nLes nombres des bonnes et mauvaises positions " +
+                                      "vont être affichés. Choisissez le mode du jeu et puis \nla difficulté (qui change le nombre d'essais, la longueur de la combinaison et le nombre de couleurs possibles.)\n" +
+                                      "La différence entre les deux modes est l'affichage (\"Bonnes positions: 1; Mauvaises positions : 2\" pour le mode difficile \net \"_G$_\" pour le mode facile)\n" +
                                       "************************************************************************************************************");
                     Console.WriteLine();
                     Console.WriteLine("Tapez \"y\" pour continuer, \"q\" pour quitter:");
