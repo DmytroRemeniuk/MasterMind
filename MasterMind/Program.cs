@@ -1,7 +1,7 @@
 ﻿/*ETML
 Auteur     : Dmytro Remeniuk
 Date       : 08.09.2023
-Description: un programme qui permets jouer au Mastermind.
+Description: un programme qui permets de jouer au Mastermind.
 */
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,7 @@ namespace MasterMind
     {
         static void Main(string[] args)
         {
+            #region Variables et constantes
             //définition des valeurs (couleurs possibles, random pour générer des symboles aléatoires, valeur, entrée par l'utilisateur,
             //l'idée de random a été prise là:https://stackoverflow.com/questions/1344221/how-can-i-generate-random-alphanumeric-strings
             var colours = "GYWRBMC";
@@ -38,6 +39,7 @@ namespace MasterMind
             string affirmation;
             //combinaison créée
             char[] stringColours = new char[1];
+            #endregion
 
             //fonction pour les même parties de code pour deux modes
             void Combination()
@@ -209,6 +211,7 @@ namespace MasterMind
                     Console.ResetColor();
                 }
             }
+
             void Simple()
             {
                 //début du jeu
