@@ -39,7 +39,7 @@ namespace MasterMind
             //combinaison créée
             char[] stringColours = new char[1];
 
-            //fonction pour les même partie de code pour deux modes
+            //fonction pour les même parties de code pour deux modes
             void Combination()
             {
                 //pour différencier parties différentes
@@ -76,25 +76,23 @@ namespace MasterMind
                 Console.WriteLine("***********************");
 
                 //changer le tableau pour le nombre des couleurs choisi
-                if (numColours == 2)
+                switch (numColours)
                 {
-                    colours = "GY";
-                }
-                else if (numColours == 3)
-                {
-                    colours = "GYW";
-                }
-                else if (numColours == 4)
-                {
-                    colours = "GYWR";
-                }
-                else if (numColours == 5)
-                {
-                    colours = "GYWRB";
-                }
-                else if (numColours == 6)
-                {
-                    colours = "GYWRBM";
+                    case 2:
+                        colours = "GY";
+                        break;
+                    case 3:
+                        colours = "GYW";
+                        break;
+                    case 4:
+                        colours = "GYWR";
+                        break;
+                    case 5:
+                        colours = "GYWRB";
+                        break;
+                    case 6:
+                        colours = "GYWRBM";
+                        break;
                 }
 
                 //effacer tout ce qui est écrit pour la vue plus agréable
@@ -110,6 +108,294 @@ namespace MasterMind
                     stringColours[i] = colours[random.Next(colours.Length)];
                 }
             }
+
+            //modes
+            void Difficult()
+            {
+                //début du jeu
+                Combination();
+
+                //boucle qui donne que 10 essais
+                for (attempts = 1; attempts <= tries; attempts++)
+                {
+
+                    //des variables pour verifier bonne/mauvaise position
+                    int correctColors = 0;
+                    int correctPositions = 0;
+
+                    Console.WriteLine("Essai " + attempts);
+                    //début du jeu
+                    Console.WriteLine("Entrez la combinaison de " + combLength + " couleurs parmi " + colours + ":");
+                    guess = Console.ReadLine().ToUpper();
+
+                    //vérification si la quantité des couleurs est bonne et si les couleurs sont corrects
+                    for (int i = 0; i < guess.Length; i++)
+                    {
+                        if (!colours.Contains(guess[i]))
+                        {
+                            ok = false;
+                        }
+                        else
+                        {
+                            ok = true;
+                        }
+                    }
+                    while (guess.Length != combLength || ok == false)
+                    {
+                        Console.WriteLine("Entrez la combinaison de " + combLength + " couleurs parmi " + colours + ":");
+                        guess = Console.ReadLine().ToUpper();
+                        for (int i = 0; i < guess.Length; i++)
+                        {
+                            if (!colours.Contains(guess[i]))
+                            {
+                                ok = false;
+                            }
+                            else
+                            {
+                                ok = true;
+                            }
+                        }
+                    }
+
+                    //créer une liste avec des couleurs utilisées (l'idée: chatGPT)
+                    var usedColours = new List<char>(stringColours);
+
+                    //verifier chaque élément du tableau si c'est une bonne position
+                    for (int i = 0; i < guess.Length; i++)
+                    {
+                        if (guess[i] == stringColours[i])
+                        {
+                            correctPositions++;
+                            usedColours[i] = ' ';//marquer la couleur utilisée (l'idée: chatGPT)
+                        }
+                    }
+
+                    //verifier chaque élément du tableau si c'est une mauvaise position
+                    for (int i = 0; i < guess.Length; i++)
+                    {
+                        if (guess[i] != stringColours[i] && usedColours.Contains(guess[i]))
+                        {
+                            correctColors++;
+                            usedColours[usedColours.IndexOf(guess[i])] = ' ';//marquer la couleur utilisée (l'idée: chatGPT)
+                        }
+                    }
+
+                    //vérification d'une réponse et donner à la variable une autre valeur
+                    if (correctPositions == combLength)
+                    {
+                        attempts = 100;
+                    }
+
+                    //afficher le resultat d'une réponse
+                    Console.WriteLine("Bonnes positions: " + correctPositions);
+                    Console.WriteLine("Mauvaises positions: " + correctColors);
+                    Console.WriteLine("*************************");
+                }
+                //affichage des messages "gagné/perdu"
+                if (attempts == 101)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("*********************************************************************************************\n" +
+                                      "Vous avez gagné, voulez-vous réessayer?(tapez \"y\" si vous êtes d'accord, \"q\" pour quitter)\n" +
+                                      "*********************************************************************************************");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("*********************************************************************************************\n" +
+                                      "Vous avez perdu, la bonne combinaison était " + new string(stringColours) + ". Voulez-vous réessayer?(tapez \"y\" si vous êtes d'accord, \"q\" pour quitter)\n" +
+                                      "*********************************************************************************************");
+                    Console.ResetColor();
+                }
+            }
+            void Simple()
+            {
+                //début du jeu
+                Combination();
+
+                //tableau pour éviter des doublons
+                var noRep = new List<string>();
+
+                //boucle qui donne que 10 essais
+                for (attempts = 1; attempts <= tries; attempts++)
+                {
+
+                    //des variables pour verifier bonne position
+                    int correctPositions = 0;
+
+                    Console.WriteLine("Essai " + attempts);
+                    //début du jeu
+                    Console.WriteLine("Entrez la combinaison de " + combLength + " couleurs parmi " + colours + ":");
+                    guess = Console.ReadLine().ToUpper();
+
+                    //vérification si la quantité des couleurs est bonne et si les couleurs sont corrects
+                    for (int i = 0; i < guess.Length; i++)
+                    {
+                        if (!colours.Contains(guess[i]))
+                        {
+                            ok = false;
+                        }
+                        else
+                        {
+                            ok = true;
+                        }
+                    }
+                    while (guess.Length != combLength || ok == false)
+                    {
+                        Console.WriteLine("Entrez la combinaison de " + combLength + " couleurs parmi " + colours + ":");
+                        guess = Console.ReadLine().ToUpper();
+                        for (int i = 0; i < guess.Length; i++)
+                        {
+                            if (!colours.Contains(guess[i]))
+                            {
+                                ok = false;
+                            }
+                            else
+                            {
+                                ok = true;
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < noRep.Count(); i++)
+                    {
+                        if (noRep[i].Contains(guess))
+                        {
+                            Console.WriteLine("Vous avez déja utilisé cette combinaison, réessayez:");
+                            guess = Console.ReadLine().ToUpper();
+                            while (noRep[i].Contains(guess))
+                            {
+                                Console.WriteLine("Vous avez déja utilisé cette combinaison, réessayez:");
+                                guess = Console.ReadLine().ToUpper();
+                            }
+                            break;
+                        }
+                    }
+
+                    noRep.Add(guess);//l'idée - Sébastien
+
+                    //créer une liste avec des couleurs utilisées (l'idée: chatGPT)
+                    var usedColours = new List<char>(stringColours);
+
+                    //créer le tableau pour stocker les bonnes réponses
+                    char[] result = new char[combLength];
+
+                    //remplir ce tableau
+                    for (int i = 0; i < result.Length; i++)
+                    {
+                        result[i] = '_';
+                    }
+                    //verifier chaque élément du tableau si c'est une bonne position
+                    for (int i = 0; i < guess.Length; i++)
+                    {
+                        if (guess[i] == stringColours[i])
+                        {
+                            correctPositions++;
+                            usedColours[i] = ' ';//marquer la couleur utilisée (l'idée: chatGPT)
+                            result[i] = guess[i];
+                        }
+                    }
+
+                    //verifier chaque élément du tableau si c'est une mauvaise position
+                    for (int i = 0; i < guess.Length; i++)
+                    {
+                        if (usedColours.Contains(guess[i]) && result[i] == '_')
+                        {
+                            result[i] = '$';
+                            usedColours[usedColours.IndexOf(guess[i])] = ' ';//marquer la couleur utilisée (l'idée: chatGPT)
+                        }
+                    }
+                    //vérification d'une réponse et donner à la variable une autre valeur
+                    if (correctPositions == combLength)
+                    {
+                        attempts = 100;
+                    }
+
+
+                    //afficher le resultat d'une réponse
+                    Console.Write("Resultat: ");
+                    for (int i = 0; i < result.Length; i++)
+                    {
+                        if (result[i] == 'G' || result[i] == '$' && guess[i] == 'G')
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green; //librairie - https://stackoverflow.com/questions/2743260/is-it-possible-to-write-to-the-console-in-colour-in-net
+                            Console.Write(result[i]);
+                            Console.ResetColor();
+                        }
+                        else if (result[i] == 'Y' || result[i] == '$' && guess[i] == 'Y')
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.Write(result[i]);
+                            Console.ResetColor();
+                        }
+                        else if (result[i] == 'R' || result[i] == '$' && guess[i] == 'R')
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write(result[i]);
+                            Console.ResetColor();
+                        }
+                        else if (result[i] == 'B' || result[i] == '$' && guess[i] == 'B')
+                        {
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.Write(result[i]);
+                            Console.ResetColor();
+                        }
+                        else if (result[i] == 'M' || result[i] == '$' && guess[i] == 'M')
+                        {
+                            Console.ForegroundColor = ConsoleColor.Magenta;
+                            Console.Write(result[i]);
+                            Console.ResetColor();
+                        }
+                        else if (result[i] == 'C' || result[i] == '$' && guess[i] == 'C')
+                        {
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.Write(result[i]);
+                            Console.ResetColor();
+                        }
+                        else if (result[i] == 'W' || result[i] == '$' && guess[i] == 'W')
+                        {
+                            Console.Write(result[i]);
+                        }
+                        else if (result[i] == '_')
+                        {
+                            Console.Write(result[i]);
+                        }
+                    }
+                    Console.WriteLine();
+                    Console.WriteLine("***********************");
+                }
+                //affichage des messages "gagné/perdu"
+                if (attempts == 101)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("***********************************************************************************************\n" +
+                                      "Vous avez gagné, voulez-vous réessayer?(tapez \"y\" si vous êtes d'accord, \"q\" pour quitter)\n" +
+                                      "***********************************************************************************************");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("*******************************************************************************************************\n" +
+                                      "Vous avez perdu, la bonne combinaison était " + new string(stringColours) + ". Voulez-vous réessayer?(tapez \"y\" si vous êtes d'accord, \"q\" pour quitter)\n" +
+                                      "*******************************************************************************************************");
+                    Console.ResetColor();
+                }
+            }
+
+            //affichage des règles
+            void Rules()
+            {
+                Console.WriteLine("************************************************************************************************************\n" +
+                                      "Règles: dans ce jeu vous allez deviner la combinaison de couleurs qui a été créée par le programme. \nLes nombres des bonnes et mauvaises positions " +
+                                      "vont être affichés. Choisissez le mode du jeu et puis \nla difficulté (qui change le nombre d'essais, la longueur de la combinaison et le nombre de couleurs possibles.)\n" +
+                                      "La différence entre les deux modes est l'affichage (\"Bonnes positions: 1; Mauvaises positions : 2\" pour le mode difficile \net \"_G$_\" pour le mode facile)\n" +
+                                      "************************************************************************************************************");
+                Console.WriteLine();
+                Console.WriteLine("Tapez \"y\" pour continuer, \"q\" pour quitter:");
+            }
+
             //boucle qui demande l'utilisateur s'il veux continuer
             do
             {
@@ -133,295 +419,25 @@ namespace MasterMind
                 }
 
                 //vérifications de la réponse
-                if (mode == "d")
+                switch(mode)
                 {
-                    //début du jeu
-                    Combination();
-
-                    //boucle qui donne que 10 essais
-                    for (attempts = 1; attempts <= tries; attempts++)
-                    {
-
-                        //des variables pour verifier bonne/mauvaise position
-                        int correctColors = 0;
-                        int correctPositions = 0;
-
-                        Console.WriteLine("Essai " + attempts);
-                        //début du jeu
-                        Console.WriteLine("Entrez la combinaison de " + combLength + " couleurs parmi " + colours + ":");
-                        guess = Console.ReadLine().ToUpper();
-
-                        //vérification si la quantité des couleurs est bonne et si les couleurs sont corrects
-                        for (int i = 0; i < guess.Length; i++)
-                        {
-                            if (!colours.Contains(guess[i]))
-                            {
-                                ok = false;
-                            }
-                            else
-                            {
-                                ok = true;
-                            }
-                        }
-                        while (guess.Length != combLength || ok == false)
-                        {
-                            Console.WriteLine("Entrez la combinaison de " + combLength + " couleurs parmi " + colours + ":");
-                            guess = Console.ReadLine().ToUpper();
-                            for (int i = 0; i < guess.Length; i++)
-                            {
-                                if (!colours.Contains(guess[i]))
-                                {
-                                    ok = false;
-                                }
-                                else
-                                {
-                                    ok = true;
-                                }
-                            }
-                        }
-
-                        //créer une liste avec des couleurs utilisées (l'idée: chatGPT)
-                        var usedColours = new List<char>(stringColours);
-
-                        //verifier chaque élément du tableau si c'est une bonne position
-                        for (int i = 0; i < guess.Length; i++)
-                        {
-                            if (guess[i] == stringColours[i])
-                            {
-                                correctPositions++;
-                                usedColours[i] = ' ';//marquer la couleur utilisée (l'idée: chatGPT)
-                            }
-                        }
-
-                        //verifier chaque élément du tableau si c'est une mauvaise position
-                        for (int i = 0; i < guess.Length; i++)
-                        {
-                            if (guess[i] != stringColours[i] && usedColours.Contains(guess[i]))
-                            {
-                                correctColors++;
-                                usedColours[usedColours.IndexOf(guess[i])] = ' ';//marquer la couleur utilisée (l'idée: chatGPT)
-                            }
-                        }
-
-                        //vérification d'une réponse et donner à la variable une autre valeur
-                        if (correctPositions == combLength)
-                        {
-                            attempts = 100;
-                        }
-
-                        //afficher le resultat d'une réponse
-                        Console.WriteLine("Bonnes positions: " + correctPositions);
-                        Console.WriteLine("Mauvaises positions: " + correctColors);
-                        Console.WriteLine("*************************");
-                    }
-                    //affichage des messages "gagné/perdu"
-                    if (attempts == 101)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("*********************************************************************************************\n" +
-                                          "Vous avez gagné, voulez-vous réessayer?(tapez \"y\" si vous êtes d'accord, \"q\" pour quitter)\n" +
-                                          "*********************************************************************************************");
-                        Console.ResetColor();
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("*********************************************************************************************\n" +
-                                          "Vous avez perdu, la bonne combinaison était " + new string(stringColours) + ". Voulez-vous réessayer?(tapez \"y\" si vous êtes d'accord, \"q\" pour quitter)\n" +
-                                          "*********************************************************************************************");
-                        Console.ResetColor();
-                    }
-                }
-                else if (mode == "f")
-                {
-                    //début du jeu
-                    Combination();
-
-                    //tableau pour éviter des doublons
-                    var noRep = new List<string>();
-
-                    //boucle qui donne que 10 essais
-                    for (attempts = 1; attempts <= tries; attempts++)
-                    {
-
-                        //des variables pour verifier bonne position
-                        int correctPositions = 0;
-
-                        Console.WriteLine("Essai " + attempts);
-                        //début du jeu
-                        Console.WriteLine("Entrez la combinaison de " + combLength + " couleurs parmi " + colours + ":");
-                        guess = Console.ReadLine().ToUpper();
-
-                        //vérification si la quantité des couleurs est bonne et si les couleurs sont corrects
-                        for (int i = 0; i < guess.Length; i++)
-                        {
-                            if (!colours.Contains(guess[i]))
-                            {
-                                ok = false;
-                            }
-                            else
-                            {
-                                ok = true;
-                            }
-                        }
-                        while (guess.Length != combLength || ok == false)
-                        {
-                            Console.WriteLine("Entrez la combinaison de " + combLength + " couleurs parmi " + colours + ":");
-                            guess = Console.ReadLine().ToUpper();
-                            for (int i = 0; i < guess.Length; i++)
-                            {
-                                if (!colours.Contains(guess[i]))
-                                {
-                                    ok = false;
-                                }
-                                else
-                                {
-                                    ok = true;
-                                }
-                            }
-                        }
-
-                        for (int i = 0; i < noRep.Count(); i++)
-                        {
-                            if (noRep[i].Contains(guess))
-                            {
-                                Console.WriteLine("Vous avez déja utilisé cette combinaison, réessayez:");
-                                guess = Console.ReadLine().ToUpper();
-                                while (noRep[i].Contains(guess))
-                                {
-                                    Console.WriteLine("Vous avez déja utilisé cette combinaison, réessayez:");
-                                    guess = Console.ReadLine().ToUpper();
-                                }
-                                break;
-                            }
-                        }
-
-                        noRep.Add(guess);//l'idée - Sébastien
-
-                        //créer une liste avec des couleurs utilisées (l'idée: chatGPT)
-                        var usedColours = new List<char>(stringColours);
-
-                        //créer le tableau pour stocker les bonnes réponses
-                        char[] result = new char[combLength];
-
-                        //remplir ce tableau
-                        for (int i = 0; i < result.Length; i++)
-                        {
-                            result[i] = '_';
-                        }
-                        //verifier chaque élément du tableau si c'est une bonne position
-                        for (int i = 0; i < guess.Length; i++)
-                        {
-                            if (guess[i] == stringColours[i])
-                            {
-                                correctPositions++;
-                                usedColours[i] = ' ';//marquer la couleur utilisée (l'idée: chatGPT)
-                                result[i] = guess[i];
-                            }
-                        }
-
-                        //verifier chaque élément du tableau si c'est une mauvaise position
-                        for (int i = 0; i < guess.Length; i++)
-                        {
-                            if (usedColours.Contains(guess[i]) && result[i] == '_')
-                            {
-                                result[i] = '$';
-                                usedColours[usedColours.IndexOf(guess[i])] = ' ';//marquer la couleur utilisée (l'idée: chatGPT)
-                            }
-                        }
-                        //vérification d'une réponse et donner à la variable une autre valeur
-                        if (correctPositions == combLength)
-                        {
-                            attempts = 100;
-                        }
-
-
-                        //afficher le resultat d'une réponse
-                        Console.Write("Resultat: ");
-                        for (int i = 0; i < result.Length; i++)
-                        {
-                            if (result[i] == 'G' || result[i] == '$' && guess[i] == 'G')
-                            {
-                                Console.ForegroundColor = ConsoleColor.Green; //librairie - https://stackoverflow.com/questions/2743260/is-it-possible-to-write-to-the-console-in-colour-in-net
-                                Console.Write(result[i]);
-                                Console.ResetColor();
-                            }
-                            else if (result[i] == 'Y' || result[i] == '$' && guess[i] == 'Y')
-                            {
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.Write(result[i]);
-                                Console.ResetColor();
-                            }
-                            else if (result[i] == 'R' || result[i] == '$' && guess[i] == 'R')
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.Write(result[i]);
-                                Console.ResetColor();
-                            }
-                            else if (result[i] == 'B' || result[i] == '$' && guess[i] == 'B')
-                            {
-                                Console.ForegroundColor = ConsoleColor.Blue;
-                                Console.Write(result[i]);
-                                Console.ResetColor();
-                            }
-                            else if (result[i] == 'M' || result[i] == '$' && guess[i] == 'M')
-                            {
-                                Console.ForegroundColor = ConsoleColor.Magenta;
-                                Console.Write(result[i]);
-                                Console.ResetColor();
-                            }
-                            else if (result[i] == 'C' || result[i] == '$' && guess[i] == 'C')
-                            {
-                                Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.Write(result[i]);
-                                Console.ResetColor();
-                            }
-                            else if (result[i] == 'W' || result[i] == '$' && guess[i] == 'W')
-                            {
-                                Console.Write(result[i]);
-                            }
-                            else if (result[i] == '_')
-                            {
-                                Console.Write(result[i]);
-                            }
-                        }
-                        Console.WriteLine();
-                        Console.WriteLine("***********************");
-                    }
-                    //affichage des messages "gagné/perdu"
-                    if (attempts == 101)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("***********************************************************************************************\n" +
-                                          "Vous avez gagné, voulez-vous réessayer?(tapez \"y\" si vous êtes d'accord, \"q\" pour quitter)\n" +
-                                          "***********************************************************************************************");
-                        Console.ResetColor();
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("*******************************************************************************************************\n" +
-                                          "Vous avez perdu, la bonne combinaison était " + new string(stringColours) + ". Voulez-vous réessayer?(tapez \"y\" si vous êtes d'accord, \"q\" pour quitter)\n" +
-                                          "*******************************************************************************************************");
-                        Console.ResetColor();
-                    }
-                }
-                //affichage des règles
-                else if (mode == "r")
-                {
-                    Console.WriteLine("************************************************************************************************************\n" +
-                                      "Règles: dans ce jeu vous allez deviner la combinaison de couleurs qui a été créée par le programme. \nLes nombres des bonnes et mauvaises positions " +
-                                      "vont être affichés. Choisissez le mode du jeu et puis \nla difficulté (qui change le nombre d'essais, la longueur de la combinaison et le nombre de couleurs possibles.)\n" +
-                                      "La différence entre les deux modes est l'affichage (\"Bonnes positions: 1; Mauvaises positions : 2\" pour le mode difficile \net \"_G$_\" pour le mode facile)\n" +
-                                      "************************************************************************************************************");
-                    Console.WriteLine();
-                    Console.WriteLine("Tapez \"y\" pour continuer, \"q\" pour quitter:");
-                }
+                    case "d":
+                        Difficult();
+                        break;
+                    case "f":
+                        Simple();
+                        break;
+                    case "r":
+                        Rules();
+                        break;
+                }    
+                
                 //quitter
-                else if (mode == "q")
+                if (mode == "q")
                 {
                     break;
                 }
+
                 //entrer l'affirmation de continuer
                 affirmation = Console.ReadLine().ToLower();
                 while (affirmation != "y" && affirmation != "q")
