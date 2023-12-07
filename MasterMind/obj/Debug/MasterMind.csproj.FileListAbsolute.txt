@@ -10,7 +10,6 @@ E:\Programmation C#\MasterMind\MasterMind\bin\Debug\MasterMind.exe.config
 E:\Programmation C#\MasterMind\MasterMind\bin\Debug\MasterMind.exe
 E:\Programmation C#\MasterMind\MasterMind\bin\Debug\MasterMind.pdb
 E:\Programmation C#\MasterMind\MasterMind\obj\Debug\MasterMind.csproj.AssemblyReference.cache
-E:\Programmation C#\MasterMind\MasterMind\obj\Debug\MasterMind.csproj.SuggestedBindingRedirects.cache
 E:\Programmation C#\MasterMind\MasterMind\obj\Debug\MasterMind.csproj.CoreCompileInputs.cache
 E:\Programmation C#\MasterMind\MasterMind\obj\Debug\MasterMind.exe
 E:\Programmation C#\MasterMind\MasterMind\obj\Debug\MasterMind.pdb
